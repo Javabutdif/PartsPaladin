@@ -13,6 +13,18 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\james\\OneDrive\\Desktop\\PartsPaladin\\PartsPaladin\\wwwroot\\img\\bg.avif",
+      "PackagePath": "staticwebassets\\img\\bg.avif"
+    },
+    {
+      "Id": "C:\\Users\\james\\OneDrive\\Desktop\\PartsPaladin\\PartsPaladin\\wwwroot\\img\\bg1.jpg",
+      "PackagePath": "staticwebassets\\img\\bg1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\james\\OneDrive\\Desktop\\PartsPaladin\\PartsPaladin\\wwwroot\\img\\bg2.jpg",
+      "PackagePath": "staticwebassets\\img\\bg2.jpg"
+    },
+    {
       "Id": "C:\\Users\\james\\OneDrive\\Desktop\\PartsPaladin\\PartsPaladin\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
@@ -255,6 +267,10 @@
     {
       "Id": "C:\\Users\\james\\OneDrive\\Desktop\\PartsPaladin\\PartsPaladin\\wwwroot\\uploads\\Motolite Battery_motobat.webp",
       "PackagePath": "staticwebassets\\uploads\\Motolite Battery_motobat.webp"
+    },
+    {
+      "Id": "C:\\Users\\james\\OneDrive\\Desktop\\PartsPaladin\\PartsPaladin\\wwwroot\\uploads\\Stirring Wheel_wheel.jpg",
+      "PackagePath": "staticwebassets\\uploads\\Stirring Wheel_wheel.jpg"
     },
     {
       "Id": "C:\\Users\\james\\OneDrive\\Desktop\\PartsPaladin\\PartsPaladin\\wwwroot\\uploads\\Transmission_transmission.webp",

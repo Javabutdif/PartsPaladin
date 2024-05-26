@@ -8,8 +8,10 @@ namespace PartsPaladin.Controllers
     public class AdminController(PartsPaladinContext cd) : Controller
     {
         private readonly PartsPaladinContext _context = cd;
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var items = await _context.Records.Where(m=>m.order_status == "Delivered" || m.order_status == "Received").ToListAsync();
+            ViewBag.total = items.Sum(m => m.order_total);
             return View();
         }
         public async Task<IActionResult> Orders()
@@ -78,6 +80,14 @@ namespace PartsPaladin.Controllers
         }
         public async Task<IActionResult> Cancelled(int id)
         {
+            var orderdetails = await _context.OrderDetails.Where(m => m.order_id == id).ToListAsync();
+
+            foreach (var item in orderdetails)
+            {
+                var products = _context.Product.Where(m => m.product_id == item.product_id).FirstOrDefault();
+                products.product_stocks += item.quantity;
+                _context.Product.Update(products);
+            }
             var order = await _context.Orders.Where(m => m.order_id == id).FirstOrDefaultAsync();
             var customer = await _context.Customer.Where(m => m.customer_id == order.customer_id).FirstOrDefaultAsync();
             if (order != null)
@@ -99,7 +109,7 @@ namespace PartsPaladin.Controllers
 
             return RedirectToAction("Orders");
         }
-        public async Task<IActionResult> Records()
+        public async Task<IActionResult> Transaction()
         {
             return View(await _context.Records.ToListAsync());
         }

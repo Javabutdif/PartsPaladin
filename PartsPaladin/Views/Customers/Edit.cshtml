@@ -5,42 +5,38 @@
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
 
-<h1>Edit</h1>
+<h1 class="text-white">Edit</h1>
 
-<h4>Customer</h4>
+<h4 class="text-white">Customer</h4>
 <hr />
-<div class="row">
+<div class="row text-white">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" asp-controller="Customers">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="customer_id" />
+            <input name="id" type="hidden" asp-for="customer_id" />
             <div class="form-group">
-                <label asp-for="customer_name" class="control-label"></label>
-                <input asp-for="customer_name" class="form-control" />
+                <label asp-for="customer_name" class="control-label">Customer Name</label>
+                <input name="name" asp-for="customer_name" class="form-control" />
                 <span asp-validation-for="customer_name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="customer_email" class="control-label"></label>
-                <input asp-for="customer_email" class="form-control" />
+                <label asp-for="customer_email" class="control-label">Customer Email</label>
+                <input name="email" asp-for="customer_email" class="form-control" />
                 <span asp-validation-for="customer_email" class="text-danger"></span>
             </div>
+          
             <div class="form-group">
-                <label asp-for="customer_password" class="control-label"></label>
-                <input asp-for="customer_password" class="form-control" />
-                <span asp-validation-for="customer_password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="customer_address" class="control-label"></label>
-                <input asp-for="customer_address" class="form-control" />
+                <label asp-for="customer_address" class="control-label">Customer Address</label>
+                <input name="address" asp-for="customer_address" class="form-control" />
                 <span asp-validation-for="customer_address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="customer_city" class="control-label"></label>
-                <input asp-for="customer_city" class="form-control" />
+                <label asp-for="customer_city" class="control-label">Customer City</label>
+                <input name="city" asp-for="customer_city" class="form-control" />
                 <span asp-validation-for="customer_city" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <button type="submit"  class="btn btn-primary">Save</button>
             </div>
         </form>
     </div>

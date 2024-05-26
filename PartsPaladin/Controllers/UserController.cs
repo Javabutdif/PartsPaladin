@@ -58,7 +58,10 @@ namespace PartsPaladin.Controllers
             return View( await _context.Orders.Where(m=>m.customer_id == customer_id).ToListAsync() );
         }
             
-        public async Task<IActionResult> Store() => View(await _context.Product.ToListAsync());
+        public async Task<IActionResult> Store() => View(await _context.Product.Where(m=>m.product_stocks != 0).ToListAsync());
+
+
+
 
         public IActionResult AddCart(int quantity, int id, int price)
         {
@@ -68,6 +71,8 @@ namespace PartsPaladin.Controllers
             Cart cart = new Cart { customer_id = customer_id };
             _context.Cart.Add(cart);
             _context.SaveChanges();
+
+          
 
             var customer_cart = _context.Cart.FirstOrDefault(m => m.customer_id == customer_id);
 
@@ -89,6 +94,12 @@ namespace PartsPaladin.Controllers
             var item = await GetCartAsync();
             var customer_id = HttpContext.Session.GetInt32("id");
 
+            foreach(var prod in item) {
+                var product = _context.Product.FirstOrDefault(m => m.product_id == prod.Product.product_id );
+                product.product_stocks -= prod.cartItems.quantity;
+                _context.Product.Update(product);
+
+            }
             Orders order = new Orders { customer_id = customer_id, order_date = Convert.ToString(DateTime.Now),order_status = "Ordered", order_total = total  };
             _context.Orders.Add(order);
             _context.SaveChanges();
@@ -176,6 +187,31 @@ namespace PartsPaladin.Controllers
 
                 TempData["received"] = "The order has been successfully received!";
             }
+
+            return RedirectToAction("Orders");
+        }
+
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var orderdetails = await _context.OrderDetails.Where(m => m.order_id == id).ToListAsync();
+
+            foreach(var item in orderdetails)
+            {
+                var products =  _context.Product.Where(m => m.product_id == item.product_id).FirstOrDefault();
+                products.product_stocks += item.quantity;
+                _context.Product.Update(products);
+            }
+            var order = await _context.Orders.Where(m => m.order_id == id).FirstOrDefaultAsync();
+            if (order != null)
+            {
+                order.order_status = "Cancelled";
+
+                await _context.SaveChangesAsync();
+
+                TempData["received"] = "The order has been successfully cancelled!";
+            }
+
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Orders");
         }

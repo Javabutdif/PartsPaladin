@@ -8,7 +8,7 @@
 <div class="container login-container ">
     <div class="login-form bg-white text-center">
         <h3 class="text-center">Add Customer</h3>
-        <form>
+        <form asp-action="CreateCustomer" asp-controller="Customers">
             <div class="form-group my-3">
 
                 <input name="name" type="text" class="form-control" id="name" placeholder="Enter name">
@@ -34,7 +34,7 @@
                 <input name="conpassword" type="password" class="form-control" id="conpassword" placeholder="Confirm Password...">
             </div>
 
-            <a asp-action="Create" asp-controller="Customers"  class="btn btn-block btn-primary mb-3">Create</a>
+            <button type="submit"  class="btn btn-block btn-primary mb-3">Create</button>
       
         </form>
     </div>

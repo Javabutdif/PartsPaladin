@@ -10,7 +10,7 @@
     </div>
 }
 
-<table class="table">
+<table class="table text-white ">
     <thead>
         <tr>
             <th>Order ID</th>
@@ -43,6 +43,10 @@
                         @if(item.order_status == "Delivered")
                         {
                             <a asp-action="Received" asp-controller="User" asp-route-id="@item.order_id" class="btn btn-success">Received</a>
+                        }
+                        @if (item.order_status == "Ordered")
+                        {
+                            <a asp-action="Cancel" asp-controller="User" asp-route-id="@item.order_id" class="btn btn-danger">Cancel</a>
                         }
                     </div>
                 </td>

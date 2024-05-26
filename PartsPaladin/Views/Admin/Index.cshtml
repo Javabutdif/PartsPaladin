@@ -1,3 +1,32 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
+@model IEnumerable<PartsPaladin.Models.Orders>
+
+
+<div class="container-fluid  text-white">
+    <h1 class="mt-4 ">Dashboard</h1>
+    <p>Welcome to the admin dashboard!</p>
+
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header text-black">
+                    Sales Overview
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-black">Total Sales</h5>
+                    <p class="card-text text-black">₱@ViewBag.total</p>
+                    <a asp-action="Orders" asp-controller="Admin" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+        </div>
+
+    </div>

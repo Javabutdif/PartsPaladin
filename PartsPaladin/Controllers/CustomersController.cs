@@ -54,7 +54,7 @@ namespace PartsPaladin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string name, string email, string address, string city, string password, string conpassword)
+        public IActionResult CreateCustomer(string name, string email, string address, string city, string password, string conpassword)
         {
             Customer customer = new Customer { customer_name = name, customer_email = email, customer_address = address, customer_city = city, customer_password = password };
             _context.Customer.Add(customer);
@@ -62,7 +62,7 @@ namespace PartsPaladin.Controllers
 
             TempData["SuccessMessage"] = "Registration successful. You can now login with your credentials.";
 
-            return RedirectToAction("Create", "Admin");
+            return RedirectToAction("Index");
         }
 
         // GET: Customers/Edit/5
@@ -86,12 +86,20 @@ namespace PartsPaladin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("customer_id,customer_name,customer_email,customer_password,customer_address,customer_city")] Customer customer)
+        public async Task<IActionResult> Edit(int id, string name, string email, string address, string city)
         {
-            if (id != customer.customer_id)
+         
+            var customer = await _context.Customer.FindAsync(id);
+            if (customer == null)
             {
                 return NotFound();
             }
+
+            // Update the properties
+            customer.customer_name = name;
+            customer.customer_email = email;
+            customer.customer_address = address;
+            customer.customer_city = city;
 
             if (ModelState.IsValid)
             {
@@ -102,19 +110,15 @@ namespace PartsPaladin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.customer_id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
+                   
                         throw;
-                    }
+                   
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(customer); // Assuming you want to return the same view with validation errors
         }
+
 
         // GET: Customers/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -139,19 +143,47 @@ namespace PartsPaladin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var customer = await _context.Customer.FindAsync(id);
-            if (customer != null)
+            if (id == null)
             {
-                _context.Customer.Remove(customer);
+                return NotFound();
             }
 
+            // Fetch related entities
+            var cartItems = await _context.Cart.Where(m => m.customer_id == id).ToListAsync();
+            var orders = await _context.Orders.Where(m => m.customer_id == id).ToListAsync();
+            var customer = await _context.Customer.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            // Delete related cart items
+            foreach (var cartItem in cartItems)
+            {
+                _context.Cart.Remove(cartItem);
+            }
+
+            // Delete related order details and orders
+            foreach (var order in orders)
+            {
+                var orderDetails = await _context.OrderDetails.Where(od => od.order_id == order.order_id).ToListAsync();
+                foreach (var orderDetail in orderDetails)
+                {
+                    _context.OrderDetails.Remove(orderDetail);
+                }
+                _context.Orders.Remove(order);
+            }
+
+            // Delete the customer
+            _context.Customer.Remove(customer);
+
+            // Save changes to the database
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int? id)
-        {
-            return _context.Customer.Any(e => e.customer_id == id);
-        }
+
     }
 }

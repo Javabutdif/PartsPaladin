@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PartsPaladin.Data;
 using PartsPaladin.Models;
 using static NuGet.Packaging.PackagingConstants;
@@ -138,34 +140,36 @@ namespace PartsPaladin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("product_id,product_name,product_description,product_price,product_stocks")] Product product)
+        public async Task<IActionResult> Edit(int? id, string name, string description,int price, int stocks )
         {
-            if (id != product.product_id)
+            var prod = await _context.Product.FindAsync(id);
+            if (prod == null)
             {
                 return NotFound();
             }
+
+            // Update the properties
+            prod.product_name = name;
+            prod.product_description = description;
+            prod.product_price = price;
+            prod.product_stocks = stocks;
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(prod);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.product_id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
+
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View(prod);
         }
 
         // GET: Products/Delete/5
@@ -191,12 +195,24 @@ namespace PartsPaladin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
+            var cart_item = await _context.CartItems.Where(m => m.product_id == id).ToListAsync();
+            var orderdetails = await _context.OrderDetails.Where(m => m.product_id == id).ToListAsync();
             var product = await _context.Product.FindAsync(id);
+
+            foreach (var cartItem in cart_item)
+            {
+                _context.CartItems.Remove(cartItem);
+            }
+            foreach (var orderitem in orderdetails)
+            {
+                _context.OrderDetails.Remove(orderitem);
+            }
+
             if (product != null)
             {
                 _context.Product.Remove(product);
             }
-
+            TempData["delete"] = "Delete Product Successfull!";
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
