@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PartsPaladin.Data;
 using PartsPaladin.Models;
+using System.Linq;
 using System.Reflection.Metadata;
 
 namespace PartsPaladin.Controllers
@@ -89,50 +91,54 @@ namespace PartsPaladin.Controllers
 
         }
 
-        public async Task<IActionResult> Checkout(int total)
+        public async Task<IActionResult> Checkout( int[] selectedItems)
         {
+            
             var item = await GetCartAsync();
             var customer_id = HttpContext.Session.GetInt32("id");
 
-            foreach(var prod in item) {
-                var product = _context.Product.FirstOrDefault(m => m.product_id == prod.Product.product_id );
-                product.product_stocks -= prod.cartItems.quantity;
-                _context.Product.Update(product);
-
-            }
-            Orders order = new Orders { customer_id = customer_id, order_date = Convert.ToString(DateTime.Now),order_status = "Ordered", order_total = total  };
-            _context.Orders.Add(order);
+            var total = 0;
+           
+           
             _context.SaveChanges();
 
-            foreach(var od in item)
+            if (selectedItems != null && selectedItems.Length > 0)
             {
-                OrderDetails orderDetails = new OrderDetails { order_id = order.order_id, product_id = od.Product.product_id , quantity = od.cartItems.quantity , price = od.cartItems.subtotal  };
-                _context.OrderDetails.Add(orderDetails);
-            }
-            Records record = new Records
-            {
-                customer_name = HttpContext.Session.GetString("name"),
-                order_date = order.order_date,
-                order_status = order.order_status,
-                order_total = order.order_total
-            };
-            _context.Records.Add(record);
-            
-            _context.SaveChanges();
+                for (int i = 0; i < selectedItems.Count(); i++)
+                {
+                    var cartItems = item.Where(ci => ci.cartItems.cart_item_id == selectedItems[i]).FirstOrDefault();
+                    total += cartItems.cartItems.subtotal;
+                }
+                Orders order = new Orders { customer_id = customer_id, order_date = Convert.ToString(DateTime.Now), order_status = "Ordered", order_total = total  };
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+                for (int i = 0; i < selectedItems.Count(); i++)
+                {
+                    
+                    var cartItems = item.Where(ci => ci.cartItems.cart_item_id == selectedItems[i]).FirstOrDefault();
+                    var product = _context.Product.FirstOrDefault(m => m.product_id == cartItems.Product.product_id);
+                    product.product_stocks -= cartItems.cartItems.quantity;
+                    _context.Product.Update(product);
+                    OrderDetails orderDetails = new OrderDetails { order_id = order.order_id, product_id = cartItems.Product.product_id, quantity = cartItems.cartItems.quantity, price = cartItems.cartItems.subtotal };
+                    _context.OrderDetails.Add(orderDetails);
+                    _context.CartItems.Remove(cartItems.cartItems);
+                    await _context.SaveChangesAsync();
+                }
+                Records record = new Records
+                {
+                    customer_name = HttpContext.Session.GetString("name"),
+                    order_date = order.order_date,
+                    order_status = order.order_status,
+                    order_total = order.order_total
+                };
+                _context.Records.Add(record);
 
-            foreach (var cartItem in item)
-            {
-                _context.CartItems.Remove(cartItem.cartItems);
+                await _context.SaveChangesAsync();
             }
+          
+          
 
-         
-            var cart = _context.Cart.FirstOrDefault(c => c.customer_id == customer_id);
-            if (cart != null)
-            {
-                _context.Cart.Remove(cart);
-            }
-
-            await _context.SaveChangesAsync();
+      
 
             TempData["successcart"] = "Checkout Successfully";
             return RedirectToAction("Cart");

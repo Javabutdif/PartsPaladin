@@ -9,6 +9,31 @@
     </div>
 }
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('input[name="selectedItems"]');
+        const totalElement = document.getElementById('totalSubtotal');
+        let totalSubtotal = 0;
+
+        function updateTotal() {
+            totalSubtotal = 0;
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    const subtotal = parseFloat(checkbox.dataset.subtotal);
+                    totalSubtotal += subtotal;
+                }
+            });
+            totalElement.textContent = totalSubtotal.toFixed(2);
+        }
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', updateTotal);
+        });
+
+        updateTotal(); 
+    });
+</script>
+
 
 <table class="table text-white">
         <thead>
@@ -21,8 +46,12 @@
             </tr>
         </thead>
         <tbody>
+            <form asp-action="Checkout" asp-controller="User">
             @foreach(var item in Model){
             <tr>
+                <td>
+                    <input type="checkbox" name="selectedItems" value="@item.cartItems.cart_item_id" data-subtotal="@item.cartItems.subtotal" />
+                </td>
                 <td>
                     <img src="@item.Product.product_image" class="img-fluid" style="height:5rem;width:5rem" />
                 </td>
@@ -41,7 +70,7 @@
             </tr>
         }
         <tr>
-            <td><strong><h3>Total: @ViewBag.TotalSubtotal</h3></strong></td>
+            <td><strong>Total:<h6 id="totalSubtotal"></h6></strong></td>
         </tr>
         <tr>
             <td>
@@ -50,5 +79,6 @@
                 </form>
                 </td>
         </tr>
+        </form>
         </tbody>
     </table>
