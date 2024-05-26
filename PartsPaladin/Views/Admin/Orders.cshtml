@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+@model IEnumerable<PartsPaladin.Models.OrderWithProducts>
+
+
+@if (TempData["successcart"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["successcart"]
+    </div>
+}
+@if (TempData["cancel"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["cancel"]
+    </div>
+}
+<h1 class="text-center">Orders</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Order Date</th>
+            <th>Order Status</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @item.customer.customer_name
+                </td>
+                <td>
+                    @item.orders.order_date
+                </td>
+                <td>
+                    @item.orders.order_status
+                </td>
+                <td>
+                    @item.orders.order_total
+                </td>
+                <td>
+                    <div class="d-flex flex-row gap-3">
+                    <a asp-action="OrderDetails" asp-controller="Admin" asp-route-id="@item.orders.order_id" class="btn btn-primary">View Details</a>
+                    <a asp-action="Delivered" asp-controller="Admin" asp-route-id="@item.orders.order_id" class="btn btn-success">Delivered</a>
+                    <a asp-action="Cancelled" asp-controller="Admin" asp-route-id="@item.orders.order_id" class="btn btn-danger">Cancelled</a>
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

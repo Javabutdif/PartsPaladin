@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+@model IEnumerable<PartsPaladin.Models.CartWithProducts>
+@if (TempData["successcart"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["successcart"]
+    </div>
+}
+
+
+    <table class="table tabletable-responsive">
+        <thead>
+            <tr>
+                <th>Product Image</th>
+                <th>Product Name</th>
+                <th>Product Quantity</th>
+                <th>Sub Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model){
+            <tr>
+                <td>
+                    <img src="@item.Product.product_image" class="img-fluid" style="height:5rem;width:5rem" />
+                </td>
+                <td>
+                    @item.Product.product_name
+                </td>
+                <td>
+                    @item.cartItems.quantity
+                </td>
+                <td>
+                    @item.cartItems.subtotal
+                </td>
+                <td>
+                    <a asp-action="Remove" asp-controller="User" asp-route-id="@item.cartItems.cart_item_id"  class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+        }
+        <tr>
+            <td><strong><h3>Total: @ViewBag.TotalSubtotal</h3></strong></td>
+        </tr>
+        <tr>
+            <td>
+                <form asp-action="Checkout" asp-controller="User" asp-route-total="@ViewBag.TotalSubtotal">
+                <button type="submit"   class="btn btn-primary">Checkout</button>
+                </form>
+                </td>
+        </tr>
+        </tbody>
+    </table>

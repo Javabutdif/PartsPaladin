@@ -1,0 +1,37 @@
+﻿@model IEnumerable<PartsPaladin.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+<h1>All Products</h1>
+
+<div class="container mt-5">
+    <div class="row">
+@foreach (var item in Model) {
+     
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <img src="@item.product_image" class="card-img-top" alt="Product">
+                <div class="card-body">
+                    <h5 class="card-title">@item.product_name</h5>
+                    <p class="card-text">Description @item.product_description</p>
+                        <p class="card-text">Price: ₱@item.product_price</p>
+               
+                </div>
+                <div class="card-footer d-flex flex-row gap-3">
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.product_id">Edit</a> 
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.product_id">Details</a> 
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.product_id">Delete</a>
+                </div>
+            </div>
+        </div>
+       
+       
+            
+         
+    
+}
+    </div>
+    </div>

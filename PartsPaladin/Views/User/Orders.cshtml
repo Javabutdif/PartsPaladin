@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+@model IEnumerable<PartsPaladin.Models.Orders>
+
+@if (TempData["received"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["received"]
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Order Date</th>
+            <th>Order Status</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+               
+                <td>
+                    @item.order_id
+                </td>
+                <td>
+                    @item.order_date
+                </td>
+                <td>
+                    @item.order_status
+                </td>
+                <td>
+                    @item.order_total
+                </td>
+                <td>
+                    <div class="d-flex flex-row gap-3">
+                    <a asp-action="OrderDetails" asp-controller="User" asp-route-id="@item.order_id" class="btn btn-primary">View Details</a>
+                        @if(item.order_status == "Delivered")
+                        {
+                            <a asp-action="Received" asp-controller="User" asp-route-id="@item.order_id" class="btn btn-success">Received</a>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+        
+    </tbody>
+</table>

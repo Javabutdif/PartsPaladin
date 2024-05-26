@@ -1,0 +1,35 @@
+﻿
+<div class="container login-container ">
+    <div class="login-form bg-white text-center">
+        <h3 class="text-center">Register</h3>
+        <form>
+            <div class="form-group my-3">
+
+                <input name="Name" type="text" class="form-control" id="name" placeholder="Enter name">
+            </div>
+            <div class="form-group my-3">
+
+                <input name="email" type="email" class="form-control" id="email" placeholder="Enter email...">
+            </div>
+            <div class="form-group my-3">
+
+                <input name="address" type="text" class="form-control" id="address" placeholder="Enter address">
+            </div>
+            <div class="form-group my-3">
+
+                <input name="city" type="text" class="form-control" id="city" placeholder="Enter city">
+            </div>
+            <div class="form-group my-3">
+
+                <input name="password" type="password" class="form-control" id="password" placeholder="Password...">
+            </div>
+            <div class="form-group my-3 mb-3">
+
+                <input name="conpassword" type="password" class="form-control" id="conpassword" placeholder="Confirm Password...">
+            </div>
+
+            <button asp-action="RegisterButton" asp-controller="Home" type="submit"  class="btn btn-block btn-primary mb-3">Register</button>
+            <p>Already have an account? <a asp-action="Index" asp-controller="Home" >Login now</a></p>
+        </form>
+    </div>
+</div>

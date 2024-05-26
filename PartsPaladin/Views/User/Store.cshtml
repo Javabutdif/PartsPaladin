@@ -1,0 +1,47 @@
+﻿@model IEnumerable<PartsPaladin.Models.Product>
+
+@{
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+@if (TempData["successcart"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["successcart"]
+    </div>
+}
+
+
+<h1>Store</h1>
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="@item.product_image" class="card-img-top" alt="Product">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.product_name</h5>
+                        <p class="card-text">Description: @item.product_description</p>
+                        <p class="card-text">Price: ₱@item.product_price</p>
+                        <p class="card-text">Quantity: @item.product_stocks</p>
+
+                    </div>
+                    <div class="card-footer d-flex flex-column gap-3">
+                        <form asp-action="AddCart" asp-controller="User" asp-route-id="@item.product_id" >
+                            <input name="quantity" type="number" class="form-control my-3" placeholder="Quantity" value="1" />
+                            <input name="price" type="hidden" class="form-control my-3" value="@item.product_price" />
+                        <button type="submit" class="btn btn-success form-control my-3">Add Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        }
+    </div>
+</div>
