@@ -56,9 +56,18 @@ namespace PartsPaladin.Controllers
         public async Task<IActionResult> Delivered(int id)
         {
             var order = await _context.Orders.Where(m=>m.order_id==id).FirstOrDefaultAsync();
-            if(order != null)
+            var customer = await _context.Customer.Where(m => m.customer_id == order.customer_id).FirstOrDefaultAsync();
+            if (order != null)
             {
                 order.order_status = "Delivered";
+                Records record = new Records
+                {
+                    customer_name = customer.customer_name ,
+                    order_date = order.order_date,
+                    order_status = order.order_status,
+                    order_total = order.order_total
+                };
+                _context.Records.Add(record);
 
                 await _context.SaveChangesAsync();
 
@@ -70,9 +79,18 @@ namespace PartsPaladin.Controllers
         public async Task<IActionResult> Cancelled(int id)
         {
             var order = await _context.Orders.Where(m => m.order_id == id).FirstOrDefaultAsync();
+            var customer = await _context.Customer.Where(m => m.customer_id == order.customer_id).FirstOrDefaultAsync();
             if (order != null)
             {
                 order.order_status = "Cancelled";
+                Records record = new Records
+                {
+                    customer_name = customer.customer_name,
+                    order_date = order.order_date,
+                    order_status = order.order_status,
+                    order_total = order.order_total
+                };
+                _context.Records.Add(record);
 
                 await _context.SaveChangesAsync();
 
@@ -80,6 +98,10 @@ namespace PartsPaladin.Controllers
             }
 
             return RedirectToAction("Orders");
+        }
+        public async Task<IActionResult> Records()
+        {
+            return View(await _context.Records.ToListAsync());
         }
 
 

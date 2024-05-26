@@ -98,8 +98,14 @@ namespace PartsPaladin.Controllers
                 OrderDetails orderDetails = new OrderDetails { order_id = order.order_id, product_id = od.Product.product_id , quantity = od.cartItems.quantity , price = od.cartItems.subtotal  };
                 _context.OrderDetails.Add(orderDetails);
             }
-
-         
+            Records record = new Records
+            {
+                customer_name = HttpContext.Session.GetString("name"),
+                order_date = order.order_date,
+                order_status = order.order_status,
+                order_total = order.order_total
+            };
+            _context.Records.Add(record);
             
             _context.SaveChanges();
 

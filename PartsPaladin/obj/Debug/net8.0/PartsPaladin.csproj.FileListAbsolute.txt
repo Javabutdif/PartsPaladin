@@ -250,3 +250,4 @@ C:\Users\james\OneDrive\Desktop\PartsPaladin\PartsPaladin\obj\Debug\net8.0\refin
 C:\Users\james\OneDrive\Desktop\PartsPaladin\PartsPaladin\obj\Debug\net8.0\PartsPaladin.pdb
 C:\Users\james\OneDrive\Desktop\PartsPaladin\PartsPaladin\obj\Debug\net8.0\PartsPaladin.genruntimeconfig.cache
 C:\Users\james\OneDrive\Desktop\PartsPaladin\PartsPaladin\obj\Debug\net8.0\ref\PartsPaladin.dll
+C:\Users\james\OneDrive\Desktop\PartsPaladin\PartsPaladin\obj\Debug\net8.0\PartsPaladin.sourcelink.json

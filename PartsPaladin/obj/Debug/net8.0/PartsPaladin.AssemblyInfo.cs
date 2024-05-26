@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PartsPaladin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0d9d43882978ed8e3a61bf284a820091f3ad2697")]
 [assembly: System.Reflection.AssemblyProductAttribute("PartsPaladin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PartsPaladin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
